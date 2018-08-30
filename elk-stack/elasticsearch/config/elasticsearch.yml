@@ -1,0 +1,11 @@
+cluster:
+  name: "cluster01"
+
+network:
+  host: 0.0.0.0
+
+node.name: ${HOSTNAME}
+
+discovery.zen.minimum_master_nodes: 1
+xpack.monitoring.collection.enabled: true
+

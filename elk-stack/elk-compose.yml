@@ -1,0 +1,41 @@
+version: '3'
+
+networks:
+  default:
+    external:
+      name: dbnet
+
+
+services:
+  elasticsearch:
+    build: ./elasticsearch
+    image: hshekhar47/elasticsearch:latest
+    hostname: elasticsearch
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - 9200:9200
+      - 9300:9300
+    
+  logstash:
+    build: ./logstash
+    image: hshekhar47/logstash:latest
+    hostname: logstash
+    stdin_open: true
+    depends_on:
+      - elasticsearch
+    external_links:
+      - oracledb
+    links:
+      - elasticsearch
+  
+  kibana:
+    build: ./kibana
+    image: hshekhar47/kibana
+    hostname: kibana
+    depends_on:
+      - elasticsearch
+    links:
+      - elasticsearch
+    ports:
+      - 5601:5601

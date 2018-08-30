@@ -1,0 +1,10 @@
+server:
+  name: kibana
+  host: kibana
+
+elasticsearch:
+  url: http://elasticsearch:9200
+
+xpack:
+  monitoring:
+    enabled: true

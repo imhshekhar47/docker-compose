@@ -1,0 +1,10 @@
+http:
+  host: "127.0.0.1"
+
+config.debug: true
+log.level: info
+
+xpack.monitoring:
+  enabled: true
+  elasticsearch:
+    url: ["elasticsearch:9200"]

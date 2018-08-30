@@ -1,0 +1,15 @@
+- module: system
+  metricsets:
+    - core
+    - cpu
+    - load
+    - memory
+    - process
+  enabled: true
+  period: 15s
+
+  core.metrics: [percentages]
+  cpu.metrics:  ["percentages"] 
+  process.include_top_n:
+    by_cpu: 10
+    by_memory: 10
