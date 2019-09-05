@@ -1,7 +1,7 @@
 # Overview
-<img src="wiki/images/icon-elk-e.svg" width=96px />
-<img src="wiki/images/icon-elk-l.svg" width=96px />
-<img src="wiki/images/icon-elk-k.svg" width=96px />
+<img src="./images/icon-elk-e.svg" width=96px />
+<img src="./images/icon-elk-l.svg" width=96px />
+<img src="./images/icon-elk-k.svg" width=96px />
 
 This is a setup of elk stack using docker.
 
