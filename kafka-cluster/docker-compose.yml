@@ -1,0 +1,90 @@
+version: '3'
+
+services:
+  hs-zookeeper:
+    image: zookeeper:latest
+    hostname: hs-zookeper
+    container_name: hs-zookeeper
+    tty: true
+  
+  hs-broker-01:
+    image: imhshekhar47/kafka:latest
+    hostname: hs-broker-01
+    container_name: hs-broker-01
+    depends_on:
+      - hs-zookeeper
+    environment:
+      - KAFKA_BROKER_ID=1
+      - ZOOKEEPER_HOSTNAME=hs-zookeeper
+      - KAFKA_ADVERT_LISTENER_HOST=localhost
+      - KAFKA_ADVERT_LISTENER_PORT=9001
+      - KAFKA_TOPICS=actors:1:2,movies:1:2
+    ports:
+      - 9001:9001
+    tty: true
+  
+  hs-broker-02:
+    image: imhshekhar47/kafka:latest
+    hostname: hs-broker-02
+    container_name: hs-broker-02
+    depends_on:
+      - hs-zookeeper
+    environment:
+      - KAFKA_BROKER_ID=2
+      - ZOOKEEPER_HOSTNAME=hs-zookeeper
+      - KAFKA_ADVERT_LISTENER_HOST=localhost
+      - KAFKA_ADVERT_LISTENER_PORT=9002
+      - KAFKA_TOPICS=movie-ratings:1:2,actor-ratings:1:2
+    ports:
+      - 9002:9002
+    tty: true
+  
+  hs-connector:
+    image: imhshekhar47/kafka-connector:latest
+    hostname: hs-connector
+    container_name: hs-connector
+    depends_on:
+      - hs-broker-01
+      - hs-broker-02
+    environment:
+      - GROUP_ID=1
+      - KAFKA_BROKERS=hs-broker-01:29092,hs-broker-02:29092
+      - CONFIG_STORAGE_TOPIC=connect-config
+      - OFFSET_STORAGE_TOPIC=connect-offset
+      - STATUS_STORAGE_TOPIC=connect-status
+    tty: true
+
+  
+  hs-movie-producer:
+    build: containers/movie-producer
+    hostname: hs-movie-producer
+    container_name: hs-movie-producer
+    depends_on:
+      - hs-broker-01
+      - hs-broker-02
+    environment:
+      - KAFKA_BROKERS=hs-broker-01:29092,hs-broker-02:29092
+    tty: true
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.0
+    hostname: elasticsearch
+    container_name: elasticsearch
+    environment:
+      - ES_JAVA_OPTS=-Xms512m -Xmx1024m
+      - discovery.type=single-node
+    ports:
+      - 9200:9200
+  
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.3.0
+    hostname: kibana
+    container_name: kibana
+    depends_on:
+      - elasticsearch
+    ports:
+      - 5601:5601
+  
+  
+
+  
